@@ -14,6 +14,7 @@ public class DataService {
     String absolutePath;
     Map<String, List<String>> productsToCarriersMap = new HashMap<>();
     Map<String, Integer> carriersRankingMap = new HashMap<>();
+
     public DataService(String absolutePath) {
         this.absolutePath = absolutePath;
     }
@@ -25,7 +26,7 @@ public class DataService {
             TypeReference<Map<String, List<String>>> typeRef = new TypeReference<>() {};
             productsToCarriersMap = objectMapper.readValue(srcJsonFile, typeRef);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IllegalArgumentException("Error reading file");
         }
     }
 
@@ -35,31 +36,10 @@ public class DataService {
         }
     }
 
-    public void countCarriersRanking() {
-        for (List<String> carriers: productsToCarriersMap.values()) {
-            for (String carrier : carriers) {
-                carriersRankingMap.merge(carrier, 1, Integer::sum);
-            }
-        }
-    }
-
-    public void printCarriersRankingData() {
-        Map<String, Integer> sortedCarriersRankingMap = new LinkedHashMap<>();
-        carriersRankingMap.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .forEachOrdered(x -> sortedCarriersRankingMap.put(x.getKey(), x.getValue()));
-        for (Map.Entry<String, Integer> entry : sortedCarriersRankingMap.entrySet()) {
-            System.out.println(entry.getKey() + " -> " + entry.getValue());
-        }
-    }
 
     public static void main(String[] args) {
         DataService dataManager = new DataService("/Users/veraemelianova/IdeaProjects/ocado-task/src/main/resources/config.json");
         dataManager.loadData();
         dataManager.printProductsToCarrierData();
-        dataManager.countCarriersRanking();
-        dataManager.printCarriersRankingData();
-
-
     }
 }

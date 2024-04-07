@@ -1,5 +1,7 @@
 package org.example;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -98,6 +100,19 @@ public class Main {
         }
     }
 
+    public static Map<String, List<String>> getResultMap(int[][] result, Map<Integer, String> products, Map<Integer, String> carriers){
+        Map<String, List<String>> resultMapped = new HashMap<>(Map.of());
+        for (int i = 0; i < result.length; i++) {
+            for (int j = 0; j < result[i].length; j++) {
+                if (result[i][j] == 1) {
+                    resultMapped.put(products.get(i), List.of(carriers.get(j)));
+                }
+            }
+        }
+        return resultMapped;
+
+    }
+
     public static void main(String[] args) {
         // Example usage
         // Define allowedColumns based on your specific problem
@@ -112,29 +127,30 @@ public class Main {
         var products = Map.of(
                 0, "Steak (300g)",
                 1, "Carrots (1kg)",
-                2, "Cold Beer (300 ml.)",
-                3, "AA Battery (4 Pcs.)",
-                4, "Espresso Machine",
-                5, "Garden Chair");
+                2, "Cold Beer (300 ml.)"
+        );
 
-        var carriers = Map.of(0, "Express", 1, "CNC", 2, "Courier");
+        var carriers = Map.of(
+                0, "Express",
+                1, "CNC"
+        );
 
-        var scores = Map.of(0, 30, 1, 20, 2, 10);
+        var scores = Map.of(
+                0, 10,
+                1, 20
+        );
 
 
-        var res = minimizeColumnsWithOnes(6, 3, Map.of(1, Set.of(0, 1), 2, Set.of(0), 0, Set.of(0, 1), 3, Set.of(0, 2), 4, Set.of(1, 2), 5, Set.of(2)), scores);
+        var res = minimizeColumnsWithOnes(3, 2, Map.of(
+                0, Set.of(0),
+                1, Set.of(1),
+                2, Set.of(0, 1)
+        ), scores);
 
-        print2DArray(res, products, carriers);
+        var resultMapped = getResultMap(res, products, carriers);
+        System.out.println(resultMapped);
+
     }
 
-    public static void print2DArray(int[][] arr, Map<Integer, String> products, Map<Integer, String> carriers) {
-        for (int product = 0; product < arr.length; product++) {
-            for (int carrier = 0; carrier < arr[0].length; carrier++) {
-                if (arr[product][carrier] == 1) {
-                    System.out.println(products.get(product) + " -> " + carriers.get(carrier));
-                }
-            }
-            System.out.println();
-        }
-    }
+
 }
