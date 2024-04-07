@@ -10,15 +10,15 @@ import java.util.*;
 public class ShoppingCartOptimizer {
     private final int numRows;
     private final int numColumns;
-    private final Map<Integer, Set<Integer>> allowedColumns;
+    private final Map<Integer, Set<Integer>> allowedCarriers;
     private final Map<Integer, Integer> scores;
     private DPState[][] dpTable;
     private int[][] solutionTable;
 
-    public ShoppingCartOptimizer(int numRows, int numColumns, Map<Integer, Set<Integer>> allowedColumns, Map<Integer, Integer> scores) {
+    public ShoppingCartOptimizer(int numRows, int numColumns, Map<Integer, Set<Integer>> allowedCarriers, Map<Integer, Integer> scores) {
         this.numRows = numRows;
         this.numColumns = numColumns;
-        this.allowedColumns = allowedColumns;
+        this.allowedCarriers = allowedCarriers;
         this.scores = scores;
         this.solutionTable = new int[numRows][numColumns];
     }
@@ -54,9 +54,9 @@ public class ShoppingCartOptimizer {
     }
 
     private void setBaseCase() {
-        for (int column : allowedColumns.get(0)) {
+        for (int column : allowedCarriers.get(0)) {
             dpTable[0][column].setCount(1);
-            dpTable[0][column].getUsedColumns()[column] = true;
+            dpTable[0][column].getUsedCarriers()[column] = true;
             dpTable[0][column].setScore(scores.get(column));
         }
     }
@@ -65,14 +65,14 @@ public class ShoppingCartOptimizer {
         for (int row = 1; row < numRows; row++) {
             for (int prevCol = 0; prevCol < numColumns; prevCol++) {
                 if (dpTable[row - 1][prevCol].getCount() != Integer.MAX_VALUE) {
-                    for (int column : allowedColumns.get(row)) {
-                        int newCount = dpTable[row - 1][prevCol].getCount() + (dpTable[row - 1][prevCol].getUsedColumns()[column] ? 0 : 1);
+                    for (int column : allowedCarriers.get(row)) {
+                        int newCount = dpTable[row - 1][prevCol].getCount() + (dpTable[row - 1][prevCol].getUsedCarriers()[column] ? 0 : 1);
                         int newScore = dpTable[row - 1][prevCol].getScore() + scores.get(column);
                         if (newCount < dpTable[row][column].getCount() || (newCount == dpTable[row][column].getCount() && newScore > dpTable[row][column].getScore())) {
                             dpTable[row][column].setCount(newCount);
                             dpTable[row][column].setScore(newScore);
-                            System.arraycopy(dpTable[row - 1][prevCol].getUsedColumns(), 0, dpTable[row][column].getUsedColumns(), 0, numColumns);
-                            dpTable[row][column].getUsedColumns()[column] = true;
+                            System.arraycopy(dpTable[row - 1][prevCol].getUsedCarriers(), 0, dpTable[row][column].getUsedCarriers(), 0, numColumns);
+                            dpTable[row][column].getUsedCarriers()[column] = true;
                         }
                     }
                 }
@@ -95,8 +95,8 @@ public class ShoppingCartOptimizer {
         }
 
         for (int row = numRows - 1; row >= 0; row--) {
-            solutionTable[row][selectedColumn] = 1; // Mark this carrier as selected
-            boolean[] usedCols = dpTable[row][selectedColumn].getUsedColumns();
+            solutionTable[row][selectedColumn] = 1;
+            boolean[] usedCols = dpTable[row][selectedColumn].getUsedCarriers();
             selectedColumn = -1;
             minCount = Integer.MAX_VALUE;
             maxScore = 0;

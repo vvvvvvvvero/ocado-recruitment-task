@@ -1,6 +1,7 @@
 package org.example.splitter;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import org.example.entities.ShoppingCart;
 import org.example.entities.ShoppingCartMapper;
@@ -24,7 +25,7 @@ public class BasketSplitter {
     }
 
     public Map<String, List<String>> split(List<String> items) {
-        Map<String, List<String>> productsToCarriersMap = fileService.readConfigFile("/Users/veraemelianova/IdeaProjects/ocado-task/src/main/resources/config.json");
+        Map<String, List<String>> productsToCarriersMap = fileService.readConfigFile(absolutePathToConfigFile);
 
         ShoppingCart shoppingCart = new ShoppingCart(items);
         shoppingCart.prepareCart(productsToCarriersMap);

@@ -1,6 +1,7 @@
 package org.example.entities;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import org.example.util.FileService;
 
@@ -15,6 +16,9 @@ public class ShoppingCart {
     private Map<String, Integer> carriersRank = new HashMap<>();
 
     public ShoppingCart(List<String> cartProducts) {
+        if (cartProducts == null || cartProducts.isEmpty()) {
+            throw new IllegalArgumentException("List of products cannot be null or empty");
+        }
         this.cartProducts = cartProducts;
     }
 
@@ -25,17 +29,13 @@ public class ShoppingCart {
     }
 
     private void populateCartMap(Map<String, List<String>> productToCarrierMap) {
-        List<String> productsToRemove = new ArrayList<>();
         for (String product : cartProducts) {
             List<String> carriers = productToCarrierMap.get(product);
-            if (carriers != null) {
-                cartMap.put(product, carriers);
-            } else {
-                productsToRemove.add(product);
-                System.out.println("Product " + product + " is not available and will not be added to the cart.");
+            if (carriers == null) {
+                throw new IllegalArgumentException("Product " + product + " is not present in the configuration file");
             }
+            cartMap.put(product, carriers);
         }
-        cartProducts.removeAll(productsToRemove);
     }
 
     private void populateCartCarriers() {

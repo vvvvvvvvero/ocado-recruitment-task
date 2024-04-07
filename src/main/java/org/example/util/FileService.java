@@ -44,12 +44,4 @@ public class FileService {
         return file;
     }
 
-    public static void main(String[] args) {
-        FileService fileService = new FileService();
-        Map<String, List<String>> productsToCarriersMap = fileService.readConfigFile("/Users/veraemelianova/IdeaProjects/ocado-task/src/main/resources/config.json");
-        System.out.println(productsToCarriersMap);
-        List<String> products = fileService.readCartFile("/Users/veraemelianova/IdeaProjects/ocado-task/src/main/resources/basket-1.json");
-        System.out.println(products);
-    }
-
 }
