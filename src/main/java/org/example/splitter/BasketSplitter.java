@@ -1,36 +1,50 @@
 package org.example.splitter;
 
-import org.example.CartService;
-import org.example.DataService;
-import org.example.Main;
+import lombok.Getter;
+import lombok.Setter;
+import org.example.entities.ShoppingCart;
+import org.example.entities.ShoppingCartMapper;
+import org.example.entities.ShoppingCartOptimizer;
+import org.example.util.FileService;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+@Getter
+@Setter
 public class BasketSplitter {
 
     private final String absolutePathToConfigFile;
+    private final FileService fileService;
 
     public BasketSplitter(String absolutePathToConfigFile) {
         this.absolutePathToConfigFile = absolutePathToConfigFile;
+        this.fileService = new FileService();
     }
 
     public Map<String, List<String>> split(List<String> items) {
-        DataService dataService = new DataService(absolutePathToConfigFile);
-        CartService cartService = new CartService(dataService);
-        cartService.loadProductsFromFile("/Users/veraemelianova/IdeaProjects/ocado-task/src/main/resources/basket-1.json");
-        cartService.createCartMap();
-        cartService.countCarriersRanking();
-        var carriers = cartService.getIndexedCarriers();
-        var products = cartService.getIndexedProducts();
-        var carriersRanking = cartService.getIndexedCarriersRanking();
-        var allowed = cartService.getIndexedProductsToAllowedCarriers();
-        var result = Main.minimizeColumnsWithOnes(cartService.getNumberOfProducts(), cartService.getNumberOfCarriers(), allowed, carriersRanking);
-        return Main.getResultMap(result, products,carriers);
+        Map<String, List<String>> productsToCarriersMap = fileService.readConfigFile("/Users/veraemelianova/IdeaProjects/ocado-task/src/main/resources/config.json");
+
+        ShoppingCart shoppingCart = new ShoppingCart(items);
+        shoppingCart.prepareCart(productsToCarriersMap);
+
+        ShoppingCartMapper shoppingCartMapper = new ShoppingCartMapper(shoppingCart);
+
+        int numberOfProducts = shoppingCart.getNumberOfProducts();
+        int numberOfCarriers = shoppingCart.getNumberOfCarriers();
+        Map<Integer, Set<Integer>> availableCarriers = shoppingCartMapper.getProductIndexToTheirCarrierMap();
+        Map<Integer, Integer> carrierRanks = shoppingCartMapper.getCarrierIndexToTheirRankMap();
+
+        ShoppingCartOptimizer shoppingCartOptimizer = new ShoppingCartOptimizer(numberOfProducts, numberOfCarriers, availableCarriers, carrierRanks);
+        return shoppingCartOptimizer.createSolutionMap(shoppingCartMapper.getIndexedProducts(), shoppingCartMapper.getIndexedCarriers());
+
     }
 
     public static void main(String[] args) {
         BasketSplitter basketSplitter = new BasketSplitter("src/main/resources/config.json");
-        System.out.println(basketSplitter.split(List.of("Cookies Oatmeal Raisin", "Cheese Cloth")));
+        List<String> products = basketSplitter.getFileService().readCartFile("/Users/veraemelianova/IdeaProjects/ocado-task/src/main/resources/basket-1.json");
+        System.out.println(basketSplitter.split(products));
+
     }
 }

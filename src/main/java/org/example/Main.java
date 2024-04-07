@@ -100,19 +100,6 @@ public class Main {
         }
     }
 
-    public static Map<String, List<String>> getResultMap(int[][] result, Map<Integer, String> products, Map<Integer, String> carriers){
-        Map<String, List<String>> resultMapped = new HashMap<>(Map.of());
-        for (int i = 0; i < result.length; i++) {
-            for (int j = 0; j < result[i].length; j++) {
-                if (result[i][j] == 1) {
-                    resultMapped.put(products.get(i), List.of(carriers.get(j)));
-                }
-            }
-        }
-        return resultMapped;
-
-    }
-
     public static void main(String[] args) {
         // Example usage
         // Define allowedColumns based on your specific problem
@@ -136,7 +123,7 @@ public class Main {
         );
 
         var scores = Map.of(
-                0, 10,
+                0, 30,
                 1, 20
         );
 
@@ -147,8 +134,6 @@ public class Main {
                 2, Set.of(0, 1)
         ), scores);
 
-        var resultMapped = getResultMap(res, products, carriers);
-        System.out.println(resultMapped);
 
     }
 

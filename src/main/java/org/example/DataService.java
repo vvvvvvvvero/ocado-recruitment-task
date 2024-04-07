@@ -13,7 +13,6 @@ import java.util.*;
 public class DataService {
     String absolutePath;
     Map<String, List<String>> productsToCarriersMap = new HashMap<>();
-    Map<String, Integer> carriersRankingMap = new HashMap<>();
 
     public DataService(String absolutePath) {
         this.absolutePath = absolutePath;
