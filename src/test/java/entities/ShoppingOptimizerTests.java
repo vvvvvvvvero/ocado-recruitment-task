@@ -44,12 +44,8 @@ public class ShoppingOptimizerTests {
 
         Map<String, List<String>> result = optimizer.createSolutionMap(products, carriers);
 
-        assertEquals("Express Delivery", result.get("Carrots (1kg)").getFirst(), "Carrots should be assigned to Express Delivery");
-        assertEquals("Express Delivery", result.get("Cold Beer (330ml)").getFirst(), "Cold Beer should be assigned to Express Delivery");
-        assertEquals("Express Delivery", result.get("Steak (300g)").getFirst(), "Steak should be assigned to Express Delivery");
-        assertEquals("Express Delivery", result.get("AA Battery (4 Pcs.)").getFirst(), "AA Battery should be assigned to Express Delivery");
-        assertEquals("Courier", result.get("Espresso Machine").getFirst(), "Espresso Machine should be assigned to Click&Collect");
-        assertEquals("Courier", result.get("Garden Chair").getFirst(), "Garden Chair should be assigned to Courier");
+        assertEquals(List.of("Carrots (1kg)", "Cold Beer (330ml)", "Steak (300g)", "AA Battery (4 Pcs.)"), result.get("Express Delivery"), "Express Delivery should have Carrots, Cold Beer, Steak, and AA Battery");
+        assertEquals(List.of("Espresso Machine", "Garden Chair"), result.get("Courier"), "Click&Collect should have Espresso Machine and Garden Chair");
 
     }
 
@@ -77,9 +73,10 @@ public class ShoppingOptimizerTests {
 
         Map<String, List<String>> result = optimizer.createSolutionMap(products, carriers);
 
-        assertEquals("Pick-up point", result.get("Cookies Oatmeal Raisin").getFirst(), "Cookies should be assigned to Pick-up point");
-        assertEquals("Parcel locker", result.get("Cheese Cloth").getFirst(), "Cheese should be assigned to Parcel locker");
-        assertEquals("Parcel locker", result.get("English Muffin").getFirst(), "English Muffin should be assigned to Parcel locker");
+        assertEquals(List.of("Cookies Oatmeal Raisin"), result.get("Pick-up point"), "Pick-up point should have Cookies Oatmeal Raisin and English Muffin");
+        assertEquals(List.of("Cheese Cloth", "English Muffin"), result.get("Parcel locker"), "Parcel locker should have Cheese Cloth and English Muffin");
+
+
     }
 
     @Test
@@ -107,9 +104,8 @@ public class ShoppingOptimizerTests {
 
         Map<String, List<String>> result = optimizer.createSolutionMap(products, carriers);
 
-        assertEquals("Pick-up point", result.get("Cookies Oatmeal Raisin").getFirst(), "Cookies should be assigned to Pick-up point");
-        assertEquals("Parcel locker", result.get("Cheese Cloth").getFirst(), "Cheese should be assigned to Parcel locker");
-        assertEquals("Pick-up point", result.get("English Muffin").getFirst(), "English Muffin should be assigned to Pick-up point");
+        assertEquals(List.of("Cookies Oatmeal Raisin", "English Muffin"), result.get("Pick-up point"), "Pick-up point should have Cookies Oatmeal Raisin and English Muffin");
+        assertEquals(List.of("Cheese Cloth"), result.get("Parcel locker"), "Parcel locker should have Cheese Cloth and English Muffin");
     }
 
 

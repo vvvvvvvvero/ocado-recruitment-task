@@ -36,16 +36,19 @@ public class ShoppingCartOptimizer {
 
     public Map<String, List<String>> createSolutionMap(Map<Integer, String> products, Map<Integer, String> carriers){
         computeSolutionTable();
-        Map<String, List<String>> resultMapped = new HashMap<>(Map.of());
-        for (int i = 0; i < solutionTable.length; i++) {
-            for (int j = 0; j < solutionTable[i].length; j++) {
+        Map<String, List<String>> resultMapped = new HashMap<>();
+        for (int j = 0; j < solutionTable[0].length; j++) {
+            List<String> productList = new ArrayList<>();
+            for (int i = 0; i < solutionTable.length; i++) {
                 if (solutionTable[i][j] == 1) {
-                    resultMapped.put(products.get(i), List.of(carriers.get(j)));
+                    productList.add(products.get(i));
                 }
+            }
+            if (!productList.isEmpty()) {
+                resultMapped.put(carriers.get(j), productList);
             }
         }
         return resultMapped;
-
     }
 
     private void initializeDPTable() {
