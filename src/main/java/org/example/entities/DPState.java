@@ -13,7 +13,7 @@ public class DPState {
     private boolean[] usedCarriers;
     private int score;
 
-    DPState(int count, int numColumns, int score) {
+    public DPState(int count, int numColumns, int score) {
         this.count = count;
         this.usedCarriers = new boolean[numColumns];
         this.score = score;

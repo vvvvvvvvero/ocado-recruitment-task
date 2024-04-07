@@ -1,25 +1,29 @@
 package org.example.entities;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.util.*;
 
 @Getter
 @Setter
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ShoppingCartOptimizer {
-    private final int numRows;
-    private final int numColumns;
-    private final Map<Integer, Set<Integer>> allowedCarriers;
-    private final Map<Integer, Integer> scores;
-    private DPState[][] dpTable;
-    private int[][] solutionTable;
+    int numRows;
+    int numColumns;
+    Map<Integer, Set<Integer>> allowedCarriers;
+    Map<Integer, Integer> scores;
+    DPState[][] dpTable;
+    int[][] solutionTable;
 
     public ShoppingCartOptimizer(int numRows, int numColumns, Map<Integer, Set<Integer>> allowedCarriers, Map<Integer, Integer> scores) {
         this.numRows = numRows;
         this.numColumns = numColumns;
         this.allowedCarriers = allowedCarriers;
         this.scores = scores;
+        dpTable = new DPState[numRows][numColumns];
         this.solutionTable = new int[numRows][numColumns];
     }
 
@@ -45,7 +49,6 @@ public class ShoppingCartOptimizer {
     }
 
     private void initializeDPTable() {
-        dpTable = new DPState[numRows][numColumns];
         for (int row = 0; row < numRows; row++) {
             for (int col = 0; col < numColumns; col++) {
                 dpTable[row][col] = new DPState(Integer.MAX_VALUE, numColumns, 0);
