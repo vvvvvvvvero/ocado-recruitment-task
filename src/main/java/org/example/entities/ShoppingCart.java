@@ -1,17 +1,20 @@
 package org.example.entities;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.util.*;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE )
 public class ShoppingCart {
-    private List<String> cartProducts;
-    private List<String> cartCarriers;
-    private Map<String, List<String>> cartMap = new HashMap<>();
-    private Map<String, Integer> carriersRank = new HashMap<>();
+    List<String> cartProducts;
+    List<String> cartCarriers;
+    Map<String, List<String>> cartMap = new HashMap<>();
+    Map<String, Integer> carriersRank = new HashMap<>();
 
     public ShoppingCart(List<String> cartProducts) {
         if (cartProducts == null || cartProducts.isEmpty()) {
@@ -45,7 +48,7 @@ public class ShoppingCart {
     }
 
     private void countCarriersRanking() {
-        for (List<String> carriers: cartMap.values()) {
+        for (List<String> carriers : cartMap.values()) {
             for (String carrier : carriers) {
                 carriersRank.merge(carrier, 1, Integer::sum);
             }
