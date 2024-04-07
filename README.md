@@ -21,6 +21,11 @@ The class uses a Dynamic Programming approach to solve the problem. It computes 
 The `DPState` class is used to store the state of the dynamic programming algorithm. It stores the `count`,
 which is representing minimal number of carrier used so far `usedColumns` boolean array, which is representing the carriers used so far and `score` which is representing the score of the current state, which is determined by the rank of the carrier.
 
+### Complexity Analysis
+
+**Time Complexity:** O(numRows × numColumns²) due to iterating up to numColumns carriers for each of the numRows * numColumns cells in the DP table.
+
+**Space Complexity:** O(numRows × numColumns²), as each cell in the DP table includes an array of size numColumns for used carriers, alongside the DP table's own size.
 ## Dependencies used
 
 - `Jackson` - working with JSON files
@@ -115,9 +120,9 @@ repositories {
 
 ### Example usage
 
-```
-BasketSplitter basketSplitter = new BasketSplitter("/Users/veraemelianova/IdeaProjects/ocado-task/src/main/resources/config.json");
-List<String> products = basketSplitter.getFileService().readCartFile("/Users/veraemelianova/IdeaProjects/ocado-task/src/main/resources/basket-1.json");
+```java
+BasketSplitter basketSplitter = new BasketSplitter("absolutePath/config.json");
+List<String> products = basketSplitter.getFileService().readCartFile("absolutePath/products.json");
 System.out.println(basketSplitter.split(products));
 ```
 
